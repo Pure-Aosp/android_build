@@ -72,12 +72,12 @@ function check_product()
         return
     fi
 
-    if (echo -n $1 | grep -q -e "^ax_") ; then
-       AX_BUILD=$(echo -n $1 | sed -e 's/^ax_//g')
+    if (echo -n $1 | grep -q -e "^pap_") ; then
+       PAP_BUILD=$(echo -n $1 | sed -e 's/^pap_//g')
     else
-       AX_BUILD=
+       PAP_BUILD=
     fi
-    export AX_BUILD
+    export PAP_BUILD
 
     CALLED_FROM_SETUP=true BUILD_SYSTEM=build/core \
         TARGET_PRODUCT=$1 \
@@ -477,7 +477,7 @@ function print_lunch_menu()
        echo "  (ohai, koush!)"
     fi
     echo
-    if [ "z${AX_DEVICES_ONLY}" != "z" ]; then
+    if [ "z${PAP_DEVICES_ONLY}" != "z" ]; then
        echo "Breakfast menu... pick a combo:"
     else
        echo "Lunch menu... pick a combo:"
@@ -491,7 +491,7 @@ function print_lunch_menu()
         i=$(($i+1))
     done | column
 
-    if [ "z${AX_DEVICES_ONLY}" != "z" ]; then
+    if [ "z${PAP_DEVICES_ONLY}" != "z" ]; then
        echo "... and don't forget the bacon!"
     fi
 
@@ -513,7 +513,7 @@ function brunch()
 function breakfast()
 {
     target=$1
-    AX_DEVICES_ONLY="true"
+    PAP_DEVICES_ONLY="true"
     unset LUNCH_MENU_CHOICES
     add_lunch_combo full-eng
     for f in `/bin/ls vendor/cm/vendorsetup.sh 2> /dev/null`
@@ -533,7 +533,7 @@ function breakfast()
             lunch $target
         else
             # This is probably just the CM model name
-            lunch ax_$target-userdebug
+            lunch pap_$target-userdebug
         fi
     fi
     return $?
@@ -682,8 +682,8 @@ function tapas()
 function eat()
 {
     if [ "$OUT" ] ; then
-        MODVERSION=$(get_build_var AX_VERSION)
-        ZIPFILE=ax-$MODVERSION.zip
+        MODVERSION=$(get_build_var PAP_VERSION)
+        ZIPFILE=pap-$MODVERSION.zip
         ZIPPATH=$OUT/$ZIPFILE
         if [ ! -f $ZIPPATH ] ; then
             echo "Nothing to eat"
@@ -698,7 +698,7 @@ function eat()
             done
             echo "Device Found.."
         fi
-    if (adb shell cat /system/build.prop | grep -q "ro.ax.device=$AX_BUILD");
+    if (adb shell cat /system/build.prop | grep -q "ro.pap.device=$PAP_BUILD");
     then
         # if adbd isn't root we can't write to /cache/recovery/
         adb root
@@ -720,7 +720,7 @@ EOF
     fi
     return $?
     else
-        echo "The connected device does not appear to be $AX_BUILD, run away!"
+        echo "The connected device does not appear to be $PAP_BUILD, run away!"
     fi
 }
 
@@ -1481,7 +1481,7 @@ function installboot()
     sleep 1
     adb wait-for-online shell mount /system 2>&1 > /dev/null
     adb wait-for-online remount
-    if (adb shell cat /system/build.prop | grep -q "ro.ax.device=$AX_BUILD");
+    if (adb shell cat /system/build.prop | grep -q "ro.pap.device=$PAP_BUILD");
     then
         adb push $OUT/boot.img /cache/
         for i in $OUT/system/lib/modules/*;
@@ -1497,7 +1497,7 @@ function installboot()
         adb shell chmod 644 /system/lib/modules/*
         echo "Installation complete."
     else
-        echo "The connected device does not appear to be $AX_BUILD, run away!"
+        echo "The connected device does not appear to be $PAP_BUILD, run away!"
     fi
 }
 
@@ -1524,13 +1524,13 @@ function installrecovery()
     sleep 1
     adb wait-for-online shell mount /system 2>&1 >> /dev/null
     adb wait-for-online remount
-    if (adb shell cat /system/build.prop | grep -q "ro.ax.device=$AX_BUILD");
+    if (adb shell cat /system/build.prop | grep -q "ro.pap.device=$PAP_BUILD");
     then
         adb push $OUT/recovery.img /cache/
         adb shell dd if=/cache/recovery.img of=$PARTITION
         echo "Installation complete."
     else
-        echo "The connected device does not appear to be $AX_BUILD, run away!"
+        echo "The connected device does not appear to be $PAP_BUILD, run away!"
     fi
 }
 
@@ -1904,7 +1904,7 @@ function dopush()
         echo "Device Found."
     fi
 
-    if (adb shell cat /system/build.prop | grep -q "ro.ax.device=$AX_BUILD");
+    if (adb shell cat /system/build.prop | grep -q "ro.pap.device=$PAP_BUILD");
     then
     adb root &> /dev/null
     sleep 0.3
@@ -1946,7 +1946,7 @@ function dopush()
     rm -f $OUT/.log
     return 0
     else
-        echo "The connected device does not appear to be $AX_BUILD, run away!"
+        echo "The connected device does not appear to be $PAP_BUILD, run away!"
     fi
 }
 
@@ -1963,7 +1963,7 @@ function repopick() {
 function fixup_common_out_dir() {
     common_out_dir=$(get_build_var OUT_DIR)/target/common
     target_device=$(get_build_var TARGET_DEVICE)
-    if [ ! -z $AX_FIXUP_COMMON_OUT ]; then
+    if [ ! -z $PAP_FIXUP_COMMON_OUT ]; then
         if [ -d ${common_out_dir} ] && [ ! -L ${common_out_dir} ]; then
             mv ${common_out_dir} ${common_out_dir}-${target_device}
             ln -s ${common_out_dir}-${target_device} ${common_out_dir}
