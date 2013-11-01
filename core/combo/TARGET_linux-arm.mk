@@ -93,17 +93,7 @@ ifeq ($(FORCE_ARM_DEBUGGING),true)
   TARGET_thumb_CFLAGS += -marm -fno-omit-frame-pointer
 endif
 
-<<<<<<< HEAD
-ifeq ($(TARGET_DISABLE_ARM_PIE),true)
-   PIE_GLOBAL_CFLAGS :=
-   PIE_EXECUTABLE_TRANSFORM := -Wl,-T,$(BUILD_SYSTEM)/armelf.x
-else
-   PIE_GLOBAL_CFLAGS := -fPIE
-   PIE_EXECUTABLE_TRANSFORM := -fPIE -pie
-endif
-=======
 android_config_h := $(call select-android-config-h,linux-arm)
->>>>>>> aosp/kitkat-dev
 
 TARGET_GLOBAL_CFLAGS += \
 			-msoft-float -fpic $(PIE_GLOBAL_CFLAGS) \

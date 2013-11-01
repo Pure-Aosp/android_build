@@ -453,7 +453,6 @@ bootimage-nodeps: $(MKEXT2IMG)
 	$(hide) $(MKEXT2BOOTIMG) $(INTERNAL_BOOTIMAGE_ARGS) --output $(INSTALLED_BOOTIMAGE_TARGET)
 
 else # TARGET_BOOTIMAGE_USE_EXT2 != true
->>>>>>> aosp/kitkat-dev
 
 $(INSTALLED_BOOTIMAGE_TARGET): $(MKBOOTIMG) $(INTERNAL_BOOTIMAGE_FILES)
 	$(call pretty,"Target boot image: $@")
